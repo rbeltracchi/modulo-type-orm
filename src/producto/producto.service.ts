@@ -11,17 +11,47 @@ export class ProductoService {
         private readonly productoRepository: Repository<Producto>
     ){}
 
-    public async getAll(): Promise<any>{
-        console.log("getAll de productos")
+    //CONSULTAS RAW
+    public async getAllRaw(): Promise<Producto[]>{
+        console.log("getAllRaw de productos")
         const result = await this.productoRepository.query("select * from e01_producto");
-        console.log("resultado: " + result);
-        const producto = new Producto(result[0]['codigo_producto'],
-                                        result[0]['marca'],
-                                        result[0]['nombre'],
-                                        result[0]['descripcion'],
-                                        result[0]['precio'],
-                                        result[0]['stock']);
-        console.log("producto: " + producto);
-        return producto;
+        let productos: Producto[] = [];
+        result.forEach(element => {
+            productos.push(new Producto(element['codigo_producto'],
+                                        element['marca'],
+                                        element['nombre'],
+                                        element['descripcion'],
+                                        element['precio'],
+                                        element['stock']));
+        });
+        /*for(let i=0 ; i<result.length; i++){
+            productos.push(new Producto(result[i]['codigo_producto'],
+            result[i]['marca'],
+            result[i]['nombre'],
+            result[i]['descripcion'],
+            result[i]['precio'],
+            result[i]['stock']))
+        }*/
+        return productos;
+    }
+
+    //TYPEORM GET
+    public async getAll(): Promise<Producto[]>{
+        console.log("Get All productos");
+        const result = await this.productoRepository.find();
+        let productos: Producto[] = [];
+        result.forEach(element => {
+            productos.push(this.productoRepository.create({...element}));
+        });
+        return productos;
+    }
+
+    //TYPEORM GET by id
+    public async getById(id: number): Promise<Producto>{
+        return null;
+    }
+
+    public async addProduct(newProducto: Producto):Promise<boolean>{
+        return false;
     }
 }

@@ -2,26 +2,27 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('e01_producto')
 export class Producto {
-    @PrimaryGeneratedColumn()
-    codigoProducto: number;
+
+    @PrimaryGeneratedColumn("increment")
+    private codigo_producto: number;
 
     @Column()
-    marca: string;
+    private marca: string;
    
     @Column()
-    nombre: string;
+    private nombre: string;
    
     @Column()
-    descripcion: number;
+    private descripcion: string;
    
     @Column()
-    precio: number;
+    private precio: number;
 
     @Column()
-    stock: number;
+    private stock: number;
 
-    public constructor(codigo_producto: number, marca: string, nombre: string, descripcion: number, precio: number, stock: number){
-        this.codigoProducto = codigo_producto;
+    public constructor(codigo_producto?: number, marca?: string, nombre?: string, descripcion?: string, precio?: number, stock?: number){
+        this.codigo_producto = codigo_producto;
         this.marca = marca;
         this.nombre = nombre;
         this.descripcion = descripcion;
