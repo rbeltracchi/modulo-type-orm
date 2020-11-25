@@ -2,6 +2,7 @@ import { Producto } from './producto.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ProductoDTO } from './producto.dto';
 
 @Injectable()
 export class ProductoService {
@@ -17,8 +18,7 @@ export class ProductoService {
         const result = await this.productoRepository.query("select * from e01_producto");
         let productos: Producto[] = [];
         result.forEach(element => {
-            productos.push(new Producto(element['codigo_producto'],
-                                        element['marca'],
+            productos.push(new Producto(element['marca'],
                                         element['nombre'],
                                         element['descripcion'],
                                         element['precio'],
@@ -48,10 +48,23 @@ export class ProductoService {
 
     //TYPEORM GET by id
     public async getById(id: number): Promise<Producto>{
-        return null;
+        console.log("Getting Product id: " + id);
+        const producto = await this.productoRepository.findOne(id);
+        return this.productoRepository.create({...producto});
     }
 
-    public async addProduct(newProducto: Producto):Promise<boolean>{
-        return false;
+    //Add Product - Necesita cambios en el schema de BD (autoincremental)
+    public async addProduct(newProducto: ProductoDTO):Promise<Producto>{
+        let result = await this.productoRepository.save(new Producto(
+                                                        newProducto.marca,
+                                                        newProducto.nombre,
+                                                        newProducto.descripcion,
+                                                        newProducto.precio,
+                                                        newProducto.stock));
+        let productoCreado: Producto = this.productoRepository.create({...result});
+        if(productoCreado.getCodigoProducto()){
+            return productoCreado;
+        }
+        return null;
     }
 }
