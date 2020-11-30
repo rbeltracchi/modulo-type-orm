@@ -1,9 +1,8 @@
 import { Producto } from './producto.entity';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, MoreThan, LessThanOrEqual, LessThan, MoreThanOrEqual } from 'typeorm';
 import { ProductoDTO } from './producto.dto';
-import { AnyARecord } from 'dns';
 
 @Injectable()
 export class ProductoService {
@@ -50,13 +49,17 @@ export class ProductoService {
     //TYPEORM GET
     public async getAll(): Promise<Producto[]>{
         console.log("Get All productos");
-        //let productos: Producto[] = [];
         try {
-            const result: Producto[] = await this.productoRepository.find();
+            //Get all
+            //const result: Producto[] = await this.productoRepository.find();
 
-            /*result.forEach(element => {
-                productos.push(this.productoRepository.create({...element}));
-            });*/
+            //Select * from e01_producto where (codigo_producto > 100 AND precio <= 200) OR (codigo_producto < 20 AND precio >= 200)
+            const result: Producto[] = await this.productoRepository.find({
+                where:[
+                    {"codigo_producto": MoreThan(100), "precio": LessThanOrEqual(200)},
+                    {"codigo_producto": LessThan(20), "precio": MoreThanOrEqual(200)}
+                ]
+            });
             return result
 
         } catch (error) {
@@ -81,7 +84,7 @@ export class ProductoService {
         }
     }
 
-    //Add Product - Necesita cambios en el schema de BD (autoincremental)
+    //Add Product
     public async addProduct(newProducto: ProductoDTO):Promise<Producto>{
         try {
             const productoCreado: Producto = await this.productoRepository.save(new Producto(
@@ -102,7 +105,6 @@ export class ProductoService {
                 error: "there is an error in the request, " + error,
               }, HttpStatus.NOT_FOUND);
         }        
-        
     }
 
     //#### Update Product ####
