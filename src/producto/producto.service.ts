@@ -49,13 +49,14 @@ export class ProductoService {
     //TYPEORM GET
     public async getAll(): Promise<Producto[]>{
         console.log("Get All productos");
-        let productos: Producto[] = [];
+        //let productos: Producto[] = [];
         try {
-            const result = await this.productoRepository.find();
+            const result: Producto[] = await this.productoRepository.find();
 
-            result.forEach(element => {
+            /*result.forEach(element => {
                 productos.push(this.productoRepository.create({...element}));
-            });
+            });*/
+            return result
 
         } catch (error) {
             throw new HttpException({
@@ -63,50 +64,43 @@ export class ProductoService {
                 error: "there is an error in the request, " + error,
               }, HttpStatus.NOT_FOUND);
         }
-        return productos;
     }
 
     //TYPEORM GET by id
     public async getById(id: number): Promise<Producto>{
         console.log("Getting Product id: " + id);
-        let producto;
-        let producto_creation_response;
         try {
-            producto = await this.productoRepository.findOne(id);
-            producto_creation_response = this.productoRepository.create({...producto});
+            const producto: Producto = await this.productoRepository.findOne(id);
+            return producto;
         } catch (error) {
             throw new HttpException({
                 status: HttpStatus.NOT_FOUND,
                 error: "there is an error in the request, " + error,
               }, HttpStatus.NOT_FOUND);
         }
-        return producto_creation_response;
     }
 
     //Add Product - Necesita cambios en el schema de BD (autoincremental)
     public async addProduct(newProducto: ProductoDTO):Promise<Producto>{
-        let productoCreado: Producto;
-        
         try {
-            let result = await this.productoRepository.save(new Producto(
+            const productoCreado: Producto = await this.productoRepository.save(new Producto(
                 newProducto.marca,
                 newProducto.nombre,
                 newProducto.descripcion,
                 newProducto.precio,
                 newProducto.stock)
             );
-
-            productoCreado= this.productoRepository.create({...result});
+            if(productoCreado.getCodigoProducto()){
+                return productoCreado;
+            }else{
+                throw new HttpException('No se pudo crear el producto', HttpStatus.NOT_FOUND);
+            }
         } catch (error) {
             throw new HttpException({
                 status: HttpStatus.NOT_FOUND,
                 error: "there is an error in the request, " + error,
               }, HttpStatus.NOT_FOUND);
         }        
-        if(productoCreado.getCodigoProducto()){
-            return productoCreado;
-        }else{
-            throw new HttpException('Forbidden', HttpStatus.NOT_FOUND);
-        }
+        
     }
 }
