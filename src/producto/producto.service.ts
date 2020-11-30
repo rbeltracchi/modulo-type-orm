@@ -3,6 +3,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProductoDTO } from './producto.dto';
+import { AnyARecord } from 'dns';
 
 @Injectable()
 export class ProductoService {
@@ -103,4 +104,52 @@ export class ProductoService {
         }        
         
     }
+
+    //#### Update Product ####
+    public async updateProduct(newProductoParams: ProductoDTO, id: number): Promise<Producto>{
+        try {
+            let producto: Producto = await this.getById(id);
+
+            if(producto.getCodigoProducto()){
+
+                producto.setMarca(newProductoParams.marca);
+                producto.setNombre(newProductoParams.nombre);
+                producto.setPrecio(newProductoParams.precio);
+                producto.setDescripcion(newProductoParams.descripcion);
+                producto.setStock(newProductoParams.stock);
+
+                const productoUpdated: Producto = await this.productoRepository.save(producto);
+
+                if (productoUpdated) {
+                    return productoUpdated;
+                }else {
+                    throw new HttpException('No se pudo crear el producto', HttpStatus.NOT_MODIFIED);    
+                }                
+            }else{
+                throw new HttpException('No se pudo crear el producto', HttpStatus.NOT_FOUND);
+            }
+        } catch (error) {
+            throw new HttpException({
+                status: HttpStatus.NOT_FOUND,
+                error: "there is an error in the request, " + error,
+              }, HttpStatus.NOT_FOUND);
+        }        
+    }
+
+    // #### Delete Producto ####
+    public async deleteProduct(id: number){        
+        try {
+            let producto: Producto = await this.getById(id);
+            if (producto.getCodigoProducto()) {
+                let deleteResult = await this.productoRepository.delete(id);
+                return deleteResult;
+            }
+        } catch (error) {
+            throw new HttpException({
+                status: HttpStatus.NOT_FOUND,
+                error: "there is an error in the request, " + error,
+              }, HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
