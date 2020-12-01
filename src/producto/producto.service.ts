@@ -75,10 +75,15 @@ export class ProductoService {
         console.log("Getting Product id: " + id);
         try {
             const producto: Producto = await this.productoRepository.findOne(id);
-            return producto;
+            if(producto){
+                return producto;
+            }else{
+                throw new HttpException('No se pudo encontrar el producto', HttpStatus.NOT_FOUND);
+            }
         } catch (error) {
+            console.log(error);
             throw new HttpException({
-                status: HttpStatus.NOT_FOUND,
+                status: HttpStatus.INTERNAL_SERVER_ERROR,
                 error: "there is an error in the request, " + error,
               }, HttpStatus.NOT_FOUND);
         }
@@ -100,6 +105,7 @@ export class ProductoService {
                 throw new HttpException('No se pudo crear el producto', HttpStatus.NOT_FOUND);
             }
         } catch (error) {
+            console.log(error);
             throw new HttpException({
                 status: HttpStatus.NOT_FOUND,
                 error: "there is an error in the request, " + error,
@@ -144,6 +150,10 @@ export class ProductoService {
             let producto: Producto = await this.getById(id);
             if (producto.getCodigoProducto()) {
                 let deleteResult = await this.productoRepository.delete(id);
+                if (deleteResult.affected) {
+
+
+                }
                 return deleteResult;
             }
         } catch (error) {
