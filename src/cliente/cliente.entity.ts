@@ -19,7 +19,7 @@ export class Cliente {
     @Column()
     private activo: number;
 
-    @OneToMany((type) => Factura, factura => factura.cliente, {eager: true})
+    @OneToMany((type) => Factura, factura => factura.cliente)
     public facturas: Factura[];
 
 
