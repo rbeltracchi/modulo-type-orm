@@ -1,3 +1,5 @@
+import { Cliente } from './../cliente/cliente.entity';
+import { ClienteService } from './../cliente/cliente.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Factura } from './factura.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,7 +9,9 @@ import { Repository } from 'typeorm';
 export class FacturaService {
 
     constructor(
-        @InjectRepository(Factura) private readonly facturaRepository: Repository<Factura>){}
+        @InjectRepository(Factura) private readonly facturaRepository: Repository<Factura>,
+        @InjectRepository(Cliente) private readonly clienteRepository: Repository<Cliente>,
+        ){}
 
      public async getAll(): Promise<Factura[]>{
         try {

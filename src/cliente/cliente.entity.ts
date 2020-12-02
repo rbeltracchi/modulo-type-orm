@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Factura } from './../factura/factura.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('E01_CLIENTE')
 export class Cliente {
@@ -17,6 +18,10 @@ export class Cliente {
 
     @Column()
     private activo: number;
+
+    @OneToMany((type) => Factura, factura => factura.cliente, {eager: true})
+    public facturas: Factura[];
+
 
     public constructor(nombre? : string, apellido? : string, direccion? : string, activo? : number){
         this.nombre = nombre;
@@ -63,5 +68,13 @@ export class Cliente {
 
     public setActivo(activo: number): void {
         this.activo = activo;
+    }
+
+    public getFacturas(): Factura[] {
+        return this.facturas;
+    }
+
+    public setFacturas(facturas: Factura[]): void {
+        this.facturas = facturas;
     }
 }

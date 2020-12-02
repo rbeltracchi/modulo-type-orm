@@ -1,5 +1,6 @@
+import { Cliente } from './../cliente/cliente.entity';
 import { Producto } from 'src/producto/producto.entity';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('E01_FACTURA')
 export class Factura {
@@ -19,13 +20,14 @@ export class Factura {
     @Column()
     private total_con_iva: number;
     
-    @Column()
-    private nro_cliente: number;    
+    @ManyToOne(type => Cliente, cliente => cliente.facturas)
+    @JoinColumn({ name: 'nro_factura' })
+    public cliente: Cliente;    
     
     public constructor(fecha?: Date, total_sin_iva?: number, iva?: number, total_con_iva?: number, nro_cliente?: number){
         this.fecha = fecha;
         this.iva = iva;
-        this.nro_cliente = nro_cliente;
+        //this.nro_cliente = nro_cliente;
         this.total_con_iva = total_con_iva;
         this.total_sin_iva = total_sin_iva;
     }
@@ -70,12 +72,20 @@ export class Factura {
         this.total_con_iva = total_con_iva;
     }
     
-    public getNro_cliente(): number {
+    /*public getNro_cliente(): number {
         return this.nro_cliente;
     }
     
     public setNro_cliente(nro_cliente: number): void {
         this.nro_cliente = nro_cliente;
+    }*/
+
+    public getCliente(): Cliente {
+        return this.cliente;
+    }
+
+    public setCliente(cliente: Cliente): void {
+        this.cliente = cliente;
     }
     
 }  
