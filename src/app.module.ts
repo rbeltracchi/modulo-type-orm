@@ -5,13 +5,21 @@ import { AppService } from './app.service';
 import { ProductoModule } from './producto/producto.module';
 import { ClienteModule } from './cliente/cliente.module';
 import { FacturaModule } from './factura/factura.module';
+import { TelefonoModule } from './telefono/telefono.module';
+import { LoginModule } from './login/login.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
     ProductoModule,
     ClienteModule,
-    FacturaModule
+    FacturaModule,
+    TelefonoModule,
+    LoginModule,
+    AuthModule,
+    UsersModule
   ],
   controllers: [AppController],
   providers: [AppService],

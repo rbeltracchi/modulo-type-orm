@@ -6,15 +6,19 @@ import { Module } from '@nestjs/common';
 import { ClienteController } from './cliente.controller';
 import { ClienteService } from './cliente.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Telefono } from 'src/telefono/telefono.entity';
+import { TelefonoController } from 'src/telefono/telefono.controller';
+import { TelefonoService } from 'src/telefono/telefono.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       Cliente,
-      Factura
+      Factura,
+      Telefono
     ])
   ],
-  controllers: [ClienteController, FacturaController],
-  providers: [ClienteService, FacturaService]
+  controllers: [ClienteController, FacturaController,TelefonoController],
+  providers: [ClienteService, FacturaService,TelefonoService]
 })
 export class ClienteModule {}

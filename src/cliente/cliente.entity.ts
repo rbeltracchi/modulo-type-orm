@@ -1,5 +1,6 @@
 import { Factura } from './../factura/factura.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Telefono } from 'src/telefono/telefono.entity';
 
 @Entity('E01_CLIENTE')
 export class Cliente {
@@ -21,8 +22,11 @@ export class Cliente {
 
     @OneToMany((type) => Factura, factura => factura.cliente)
     public facturas: Factura[];
-
-
+    
+    @OneToOne(type => Telefono)
+    @JoinColumn({ name: 'nro_cliente' })
+    public telefono: Telefono;
+    
     public constructor(nombre? : string, apellido? : string, direccion? : string, activo? : number){
         this.nombre = nombre;
         this.apellido = apellido;
