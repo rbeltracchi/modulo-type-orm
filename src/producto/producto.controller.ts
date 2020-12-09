@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ProductoDTO } from './producto.dto';
 import { Producto } from './producto.entity';
 import { ProductoService } from './producto.service';
@@ -17,7 +18,7 @@ export class ProductoController {
     public getAllProductos(): Promise<Producto[]>{
         return this.productoService.getAll();
     }
-
+    @UseGuards(JwtAuthGuard)
     @Get(":id")
     public getProductoById(@Param('id') id: number): Promise<Producto>{
         return this.productoService.getById(id);
