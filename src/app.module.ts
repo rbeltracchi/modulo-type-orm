@@ -9,9 +9,14 @@ import { TelefonoModule } from './telefono/telefono.module';
 import { LoginModule } from './login/login.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'client'),
+      }),
     TypeOrmModule.forRoot(),
     ProductoModule,
     ClienteModule,
