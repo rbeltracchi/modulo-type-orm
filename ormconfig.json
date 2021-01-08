@@ -1,13 +1,13 @@
 {
     "type": "mysql",
-    "host": "localhost",
+    "host": "remotemysql.com",
     "port": 3306,
-    "username": "root",
-    "password": "root",
-    "database": "CFL2020_data",
+    "username": "bI549X3ycZ",
+    "password": "cHqSgEGPuL",
+    "database": "bI549X3ycZ",
     "entities": [
       "dist/**/**.entity{.ts,.js}"
     ],
-    "synchronize": true
+    "synchronize": false
    }
    
