@@ -11,11 +11,13 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { NumbersAppModule } from './numbers-app/numbers-app.module';
 
 @Module({
   imports: [
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client'),
+      exclude: ['/api*']
       }),
     TypeOrmModule.forRoot(),
     ProductoModule,
@@ -24,7 +26,8 @@ import { join } from 'path';
     TelefonoModule,
     LoginModule,
     AuthModule,
-    UsersModule
+    UsersModule,
+    NumbersAppModule
   ],
   controllers: [AppController],
   providers: [AppService],
